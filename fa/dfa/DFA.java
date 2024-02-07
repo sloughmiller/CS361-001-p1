@@ -46,7 +46,14 @@ public class DFA implements DFAInterface {
 
     @Override
     public boolean addState(String name) {
-        return false;
+
+        if (states.contains(name)) {
+            return false;
+        } else {
+            states.add(name);
+            transitionFunction.put(name, new LinkedHashMap<>());
+            return true;
+        }
     }
 
     @Override
