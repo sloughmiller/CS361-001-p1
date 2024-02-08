@@ -1,15 +1,17 @@
 package fa.dfa;
 
 import java.util.*;
+
+import fa.DFAState;
 import fa.State;
 
 public class DFA implements DFAInterface {
 
-    private Set<String> states;
     private Set<Character> alphabet;
     private Map<String, Map<Character, String>> transitionFunction;
     private String initialState;
     private Set<String> finalStates;
+    private Set<DFAState> states;
 
     /**
      * Constructor that sets the number of states to 0, the alphabet to an empty
@@ -46,11 +48,11 @@ public class DFA implements DFAInterface {
 
     @Override
     public boolean addState(String name) {
-
-        if (states.contains(name)) {
+        DFAState newState = new DFAState(name);
+        if (states.contains(newState)) {
             return false;
         } else {
-            states.add(name);
+            states.add(newState);
             transitionFunction.put(name, new LinkedHashMap<>());
             return true;
         }
@@ -58,6 +60,12 @@ public class DFA implements DFAInterface {
 
     @Override
     public boolean setFinal(String name) {
+        for (DFAState state : states) {
+            if (state.getName().equals(name)) {
+                state.setFinal(true);
+                return true;
+            }
+        }
         return false;
     }
 
