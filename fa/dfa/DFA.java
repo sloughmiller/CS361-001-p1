@@ -24,47 +24,57 @@ public class DFA implements DFAInterface {
         finalStates = new LinkedHashSet<>();
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
         // States (Q)
-        sb.append("Q = { ");
+        sb.append("Q={");
         for (DFAState state : states) {
             sb.append(state.getName()).append(" ");
         }
+        sb.setLength(sb.length() - 1); // Remove last space
         sb.append("}\n");
 
         // Alphabet (Sigma)
-        sb.append("Sigma = { ");
+        sb.append("Sigma = {");
         for (char symbol : alphabet) {
             sb.append(symbol).append(" ");
         }
+        sb.setLength(sb.length() - 1); // Remove last space
         sb.append("}\n");
 
         // Transition Function (delta)
-        sb.append("delta =\n");
+        sb.append("delta =\n\t");
+        for (char symbol : alphabet) {
+            sb.append(symbol).append("\t");
+        }
+        sb.append("\n");
         for (DFAState state : states) {
+            sb.append(state.getName()).append("\t");
             for (char symbol : alphabet) {
                 DFAState nextState = state.getTransition(symbol);
-                String nextStateName = nextState != null ? nextState.getName() : "null";
-                sb.append("\t").append(state.getName()).append(" --").append(symbol).append("--> ")
-                        .append(nextStateName).append("\n");
+                String nextStateName = nextState != null ? nextState.getName() : "null"; // Adjust based on how you want
+                                                                                         // to handle null
+                sb.append(nextStateName).append("\t");
             }
+            sb.append("\n");
         }
 
         // Initial State (q0)
-        sb.append("q0 = ").append(initialState).append("\n");
+        sb.append("q0=").append(initialState).append("\n");
 
         // Final States (F)
-        sb.append("F = { ");
+        sb.append("F={");
         for (DFAState state : states) {
             if (state.isFinal()) {
                 sb.append(state.getName()).append(" ");
             }
         }
+        sb.setLength(sb.length() - 1); // Remove last space
         sb.append("}\n");
 
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     /**
