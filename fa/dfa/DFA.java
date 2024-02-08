@@ -25,16 +25,45 @@ public class DFA implements DFAInterface {
     }
 
     public String toString() {
-
         StringBuilder sb = new StringBuilder();
 
+        // States (Q)
         sb.append("Q = { ");
-        sb.append("}\nSigma = { ");
-        sb.append("}\ndelta =\n");
-        sb.append("q0 = ");
-        sb.append("\nF = { ");
+        for (DFAState state : states) {
+            sb.append(state.getName()).append(" ");
+        }
+        sb.append("}\n");
 
-        sb.append(" }");
+        // Alphabet (Sigma)
+        sb.append("Sigma = { ");
+        for (char symbol : alphabet) {
+            sb.append(symbol).append(" ");
+        }
+        sb.append("}\n");
+
+        // Transition Function (delta)
+        sb.append("delta =\n");
+        for (DFAState state : states) {
+            for (char symbol : alphabet) {
+                DFAState nextState = state.getTransition(symbol);
+                String nextStateName = nextState != null ? nextState.getName() : "null";
+                sb.append("\t").append(state.getName()).append(" --").append(symbol).append("--> ")
+                        .append(nextStateName).append("\n");
+            }
+        }
+
+        // Initial State (q0)
+        sb.append("q0 = ").append(initialState).append("\n");
+
+        // Final States (F)
+        sb.append("F = { ");
+        for (DFAState state : states) {
+            if (state.isFinal()) {
+                sb.append(state.getName()).append(" ");
+            }
+        }
+        sb.append("}\n");
+
         return sb.toString();
     }
 
@@ -71,7 +100,36 @@ public class DFA implements DFAInterface {
     }
 
     public DFA swap(char symb1, char symb2) {
-        return null;
+        DFA swappedDFA = new DFA();
+
+        for (DFAState state : states) {
+            swappedDFA.addState(state.getName());
+            if (state.isFinal()) {
+                swappedDFA.setFinal(state.getName());
+            }
+        }
+
+        for (char symbol : alphabet) {
+            swappedDFA.addSigma(symbol);
+        }
+
+        swappedDFA.setStart(initialState);
+        for (DFAState state : states) {
+            for (char symbol : alphabet) {
+                DFAState nextState = state.getTransition(symbol);
+                if (nextState != null) {
+                    char swappedSymbol = symbol;
+                    if (symbol == symb1) {
+                        swappedSymbol = symb2;
+                    } else if (symbol == symb2) {
+                        swappedSymbol = symb1;
+                    }
+                    swappedDFA.addTransition(state.getName(), nextState.getName(), swappedSymbol);
+                }
+            }
+        }
+
+        return swappedDFA;
     }
 
     @Override
@@ -91,6 +149,7 @@ public class DFA implements DFAInterface {
         for (DFAState state : states) {
             if (state.getName().equals(name)) {
                 state.setFinal(true);
+                finalStates.add(name);
                 return true;
             }
         }
@@ -99,22 +158,43 @@ public class DFA implements DFAInterface {
 
     @Override
     public boolean setStart(String name) {
+        DFAState state = findState(name);
+        if (state != null) {
+            initialState = name;
+            return true;
+        }
         return false;
     }
 
     @Override
     public void addSigma(char symbol) {
+        alphabet.add(symbol);
 
     }
 
     @Override
     public boolean accepts(String s) {
-        return false;
+        DFAState currentState = findState(initialState);
+        if (currentState == null) {
+            return false; // Initial state is not set or doesn't exist
+        }
+
+        for (char symbol : s.toCharArray()) {
+            if (!alphabet.contains(symbol)) {
+                return false; // Symbol not in alphabet
+            }
+            currentState = currentState.getTransition(symbol);
+            if (currentState == null) {
+                return false; // No transition defined for this symbol
+            }
+        }
+
+        return currentState.isFinal();
     }
 
     @Override
     public Set<Character> getSigma() {
-        return null;
+        return new LinkedHashSet<>(alphabet);
     }
 
     @Override
@@ -129,12 +209,13 @@ public class DFA implements DFAInterface {
 
     @Override
     public boolean isFinal(String name) {
-        return false;
+        DFAState state = findState(name);
+        return state != null && state.isFinal();
     }
 
     @Override
     public boolean isStart(String name) {
-        return false;
+        return name.equals(initialState);
     }
 
 }
