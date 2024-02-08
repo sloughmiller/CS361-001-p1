@@ -38,8 +38,36 @@ public class DFA implements DFAInterface {
         return sb.toString();
     }
 
-    public boolean addTransition(String fromState, String toState, char onSymb) {
-        return false;
+    /**
+     * Adds a transition to the DFA.
+     * 
+     */
+    public boolean addTransition(String fromStateName, String toStateName, char onSymb) {
+        if (!alphabet.contains(onSymb)) {
+            return false;
+        }
+
+        DFAState fromStateObj = findState(fromStateName);
+        DFAState toStateObj = findState(toStateName);
+
+        if (fromStateObj == null || toStateObj == null) {
+            return false;
+        }
+
+        fromStateObj.addTransition(onSymb, toStateObj);
+        return true;
+    }
+
+    /**
+     * Helper method to find a state by its name.
+     */
+    private DFAState findState(String name) {
+        for (DFAState state : states) {
+            if (state.getName().equals(name)) {
+                return state;
+            }
+        }
+        return null;
     }
 
     public DFA swap(char symb1, char symb2) {
@@ -91,6 +119,11 @@ public class DFA implements DFAInterface {
 
     @Override
     public State getState(String name) {
+        for (DFAState state : states) {
+            if (state.getName().equals(name)) {
+                return state;
+            }
+        }
         return null;
     }
 
