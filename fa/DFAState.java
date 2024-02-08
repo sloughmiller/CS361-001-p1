@@ -1,10 +1,8 @@
 package fa;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import fa.State;
+import java.util.NoSuchElementException;
 
 public class DFAState extends State {
     private boolean isFinal;
@@ -13,7 +11,7 @@ public class DFAState extends State {
     public DFAState(String name) {
         super(name);
         this.isFinal = false; // By default, a state is not final
-        this.transitions = new HashMap<>();
+        this.transitions = new LinkedHashMap<>();
     }
 
     public boolean isFinal() {
@@ -28,7 +26,14 @@ public class DFAState extends State {
         transitions.put(symbol, nextState);
     }
 
+    /**
+     * Returns the next state given a symbol
+     * throws NoSuchElementException if no transition for the symbol
+     */
     public DFAState getTransition(char symbol) {
+        if (!transitions.containsKey(symbol)) {
+            throw new NoSuchElementException("No transition for symbol: " + symbol);
+        }
         return transitions.get(symbol);
     }
 
