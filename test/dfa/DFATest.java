@@ -399,6 +399,7 @@ public class DFATest {
 		System.out.println("dfa3Swap accept pass");
 	}
 
+<<<<<<< Updated upstream
 	// @Test
 	// public void testEdgeCases() {
 	// DFA dfa = dfa3();
@@ -407,41 +408,73 @@ public class DFATest {
 	// assuming 'a', 'b', 'c' are not in the
 	// // alphabet
 	// }
+=======
+/**
+ * Our DFA
+ */
+private DFA dfaLoughmiller() {
+    DFA dfa = new DFA();
+>>>>>>> Stashed changes
 
-	// @Test
-	// public void testInvalidOperations() {
-	// DFA dfa = new DFA();
-	// assertThrows(IllegalArgumentException.class, () ->
-	// dfa.addTransition("nonexistent", "A", '1'));
-	// assertThrows(IllegalArgumentException.class, () ->
-	// dfa.setStart("nonexistent"));
-	// assertThrows(IllegalArgumentException.class, () ->
-	// dfa.setFinal("nonexistent"));
-	// }
+    dfa.addSigma('0');
+    dfa.addSigma('1');
 
-	// @Test
-	// public void testStateRemoval() {
-	// DFA dfa = dfa3();
-	// assertTrue(dfa.removeStat e("A"));
-	// assertNull(dfa.getState("A"));
-	// // check that transitions involving A are removed
-	// }
+    assertTrue(dfa.addState("A")); // Add "A" as a state
+    assertTrue(dfa.addState("B")); // Add "B" as a state
 
-	// @Test
-	// public void testAlphabetModification() {
-	// DFA dfa = new DFA();
-	// assertTrue(dfa.addSigma('3'));
-	// assertTrue(dfa.removeSigma('1'));
-	// // check that the alphabet is correctly modified
-	// }
+    assertTrue(dfa.setStart("A")); // Set "A" as the start state
+    assertTrue(dfa.setFinal("A")); // Set "A" as a final state
 
-	// @Test
-	// public void testClone() {
-	// DFA dfa = dfa3();
-	// DFA dfaClone = dfa.clone();
-	// assertTrue(dfa != dfaClone);
-	// // check that all states, transitions, start states, and final states are
-	// // identical but not the same objects
-	// }
+    assertTrue(dfa.addTransition("A", "B", '0')); // Add transition from "A" to "B" on '0'
+    assertTrue(dfa.addTransition("B", "A", '1')); // Add transition from "B" to "A" on '1'
+    assertTrue(dfa.addTransition("B", "B", '0')); // Add transition from "B" to itself on '0'
+    assertTrue(dfa.addTransition("A", "A", '1')); // Add transition from "A" to itself on '1'
+
+    return dfa;
+}
+
+
+
+//OUR TESTS
+@Test
+public void testEmpty() {
+    DFA dfa = dfaLoughmiller();
+    assertTrue(dfa.accepts("")); // assuming empty string is accepted
+
+    System.out.println("dfaEmpty testEmpty pass");
+}
+
+@Test
+public void testInvalidInput() {
+    DFA dfa = dfaLoughmiller(); 
+
+    // Test for characters not in the alphabet
+    try {
+        dfa.accepts("xyz");
+    } catch (IllegalArgumentException e) {
+        System.out.println("Passed: 'xyz' correctly threw IllegalArgumentException");
+    }
+
+    // Test for strings that don't follow the '0' followed by '1' pattern
+    if (!dfa.accepts("00")) {
+        System.out.println("Passed: '00' correctly rejected");
+    }
+    if (!dfa.accepts("11")) {
+        System.out.println("Passed: '11' correctly rejected");
+    }
+    if (dfa.accepts("01")) {
+        System.out.println("Passed: '01' correctly accepted");
+    }
+}
+
+@Test
+public void testInvalidOperations() {
+    DFA dfa = dfaLoughmiller();
+
+    assertFalse(dfa.addTransition("nonexistent", "A", '1'));
+    assertFalse(dfa.setStart("nonexistent"));
+    assertFalse(dfa.setFinal("nonexistent"));
+}
+
 
 }
