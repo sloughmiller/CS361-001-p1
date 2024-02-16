@@ -399,4 +399,49 @@ public class DFATest {
 		System.out.println("dfa3Swap accept pass");
 	}
 
+	// @Test
+	// public void testEdgeCases() {
+	// DFA dfa = dfa3();
+	// assertTrue(dfa.accepts("")); // assuming empty string is accepted
+	// assertThrows(IllegalArgumentException.class, () -> dfa.accepts("abc")); //
+	// assuming 'a', 'b', 'c' are not in the
+	// // alphabet
+	// }
+
+	// @Test
+	// public void testInvalidOperations() {
+	// DFA dfa = new DFA();
+	// assertThrows(IllegalArgumentException.class, () ->
+	// dfa.addTransition("nonexistent", "A", '1'));
+	// assertThrows(IllegalArgumentException.class, () ->
+	// dfa.setStart("nonexistent"));
+	// assertThrows(IllegalArgumentException.class, () ->
+	// dfa.setFinal("nonexistent"));
+	// }
+
+	// @Test
+	// public void testStateRemoval() {
+	// DFA dfa = dfa3();
+	// assertTrue(dfa.removeStat e("A"));
+	// assertNull(dfa.getState("A"));
+	// // check that transitions involving A are removed
+	// }
+
+	// @Test
+	// public void testAlphabetModification() {
+	// DFA dfa = new DFA();
+	// assertTrue(dfa.addSigma('3'));
+	// assertTrue(dfa.removeSigma('1'));
+	// // check that the alphabet is correctly modified
+	// }
+
+	// @Test
+	// public void testClone() {
+	// DFA dfa = dfa3();
+	// DFA dfaClone = dfa.clone();
+	// assertTrue(dfa != dfaClone);
+	// // check that all states, transitions, start states, and final states are
+	// // identical but not the same objects
+	// }
+
 }
