@@ -1,4 +1,4 @@
-package dfa;
+package fa.dfa;
 
 import java.util.*;
 

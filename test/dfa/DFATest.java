@@ -1,12 +1,13 @@
 package test.dfa;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 
 import org.junit.Test;
 
-import dfa.DFA;
+import fa.dfa.DFA;
 
 public class DFATest {
 
@@ -463,36 +464,6 @@ public class DFATest {
 	}
 
 	@Test
-	public void testMultipleStartStates() {
-		DFA dfa = new DFA();
-		dfa.addSigma('0');
-		dfa.addSigma('1');
-		dfa.addState("A");
-		dfa.addState("B");
-		dfa.setStart("A");
-		dfa.setStart("B");
-		// Check behavior or expect an error
-		System.out.println("testMultipleStartStates pass");
-	}
-
-	@Test
-	public void testMultipleFinalStates() {
-		DFA dfa = new DFA();
-		dfa.addSigma('0');
-		dfa.addSigma('1');
-		dfa.addState("A");
-		dfa.addState("B");
-		dfa.setStart("A");
-		dfa.setFinal("A");
-		dfa.setFinal("B");
-		dfa.addTransition("A", "B", '0');
-		dfa.addTransition("B", "A", '1');
-		assertTrue(dfa.accepts("0"));
-		assertTrue(dfa.accepts("01"));
-		System.out.println("testMultipleFinalStates pass");
-	}
-
-	@Test
 	public void testLoopOnStartState() {
 		DFA dfa = new DFA();
 		dfa.addSigma('0');
@@ -563,4 +534,224 @@ public class DFATest {
 
 		System.out.println("testLoopOnFinalState pass");
 	}
+
+	/**
+	 * Our DFA
+	 */
+	private DFA dfa4() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+
+		assertTrue(dfa.addState("A")); // Add "A" as a state
+		assertTrue(dfa.addState("B")); // Add "B" as a state
+		assertTrue(dfa.addState("C")); // Add "C" as a state
+
+		assertTrue(dfa.setStart("A")); // Set "A" as the start state
+		assertTrue(dfa.setFinal("A")); // Set "A" as a final state
+		assertTrue(dfa.setFinal("C")); // Set "C" as a final state
+
+		assertTrue(dfa.addTransition("A", "B", '0')); // Add transition from "A" to "B" on '0'
+		assertTrue(dfa.addTransition("B", "A", '1')); // Add transition from "B" to "A" on '1'
+		assertTrue(dfa.addTransition("B", "C", '0')); // Add transition from "B" to itself on '0'
+		assertTrue(dfa.addTransition("A", "A", '1')); // Add transition from "A" to itself on '1'
+
+		return dfa;
+	}
+
+	@Test
+	public void testMultipleFinalStates() {
+		DFA dfa = dfa4();
+		assertFalse(dfa.accepts("0"));
+
+		assertTrue(dfa.accepts("1"));
+		assertTrue(dfa.accepts("11"));
+		assertTrue(dfa.accepts("01"));
+		assertTrue(dfa.accepts("101"));
+		assertTrue(dfa.accepts("00"));
+		assertFalse(dfa.accepts("000"));
+		assertFalse(dfa.accepts("11001"));
+		assertFalse(dfa.accepts("0000"));
+		assertFalse(dfa.accepts("00000"));
+
+		System.out.println("testLoopOnFinalState pass");
+	}
+
+	private DFA dfa5() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+
+		assertTrue(dfa.addState("A")); // Add "A" as a state
+		assertTrue(dfa.addState("B")); // Add "B" as a state
+
+		// assertTrue(dfa.setStart("A")); // Set "A" as the start state
+		assertTrue(dfa.setFinal("A")); // Set "A" as a final state
+
+		assertTrue(dfa.addTransition("A", "B", '0')); // Add transition from "A" to "B" on '0'
+		assertTrue(dfa.addTransition("B", "A", '1')); // Add transition from "B" to "A" on '1'
+		assertTrue(dfa.addTransition("B", "B", '0')); // Add transition from "B" to itself on '0'
+		assertTrue(dfa.addTransition("A", "A", '1')); // Add transition from "A" to itself on '1'
+
+		return dfa;
+	}
+
+	@Test
+	public void testNoStartState() {
+		DFA dfa = dfa5();
+		assertFalse(dfa.accepts("0"));
+
+		assertFalse(dfa.accepts("1"));
+		assertFalse(dfa.accepts("11"));
+		assertFalse(dfa.accepts("01"));
+		assertFalse(dfa.accepts("101"));
+		assertFalse(dfa.accepts("00"));
+		assertFalse(dfa.accepts("000"));
+		assertFalse(dfa.accepts("11001"));
+		assertFalse(dfa.accepts("0000"));
+		assertFalse(dfa.accepts("00000"));
+
+		System.out.println("testLoopOnFinalState pass");
+	}
+
+	private DFA dfa6() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+
+		assertTrue(dfa.addState("A")); // Add "A" as a state
+		assertTrue(dfa.addState("B")); // Add "B" as a state
+
+		assertTrue(dfa.setStart("A")); // Set "A" as the start state
+		// assertTrue(dfa.setFinal("A")); // Set "A" as a final state
+
+		assertTrue(dfa.addTransition("A", "B", '0')); // Add transition from "A" to "B" on '0'
+		assertTrue(dfa.addTransition("B", "A", '1')); // Add transition from "B" to "A" on '1'
+		assertTrue(dfa.addTransition("B", "B", '0')); // Add transition from "B" to itself on '0'
+		assertTrue(dfa.addTransition("A", "A", '1')); // Add transition from "A" to itself on '1'
+
+		return dfa;
+	}
+
+	@Test
+	public void testNoFinalState() {
+		DFA dfa = dfa6();
+		assertFalse(dfa.accepts("0"));
+
+		assertFalse(dfa.accepts("1"));
+		assertFalse(dfa.accepts("11"));
+		assertFalse(dfa.accepts("01"));
+		assertFalse(dfa.accepts("101"));
+		assertFalse(dfa.accepts("00"));
+		assertFalse(dfa.accepts("000"));
+		assertFalse(dfa.accepts("11001"));
+		assertFalse(dfa.accepts("0000"));
+		assertFalse(dfa.accepts("00000"));
+
+		System.out.println("testLoopOnFinalState pass");
+	}
+
+	private DFA dfa7() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+
+		assertTrue(dfa.addState("A")); // Add "A" as a state
+
+		assertTrue(dfa.setStart("A")); // Set "A" as the start state
+
+		assertTrue(dfa.addTransition("A", "A", '0')); // Add transition from "A" to "A" on '0'
+		assertTrue(dfa.addTransition("A", "A", '1')); // Add transition from "A" to itself on '1'
+
+		return dfa;
+	}
+
+	@Test
+	public void testSingleStateNoFinal() {
+		DFA dfa = dfa7();
+		assertFalse(dfa.accepts("0"));
+		assertFalse(dfa.accepts("1"));
+		assertFalse(dfa.accepts("11"));
+		assertFalse(dfa.accepts("01"));
+		assertFalse(dfa.accepts("101"));
+		assertFalse(dfa.accepts("00"));
+		assertFalse(dfa.accepts("000"));
+		assertFalse(dfa.accepts("11001"));
+		assertFalse(dfa.accepts("0000"));
+		assertFalse(dfa.accepts("00000"));
+
+		System.out.println("testLoopOnFinalState pass");
+	}
+
+	private DFA dfa8() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+
+		assertTrue(dfa.addState("A")); // Add "A" as a state
+
+		assertTrue(dfa.setStart("A")); // Set "A" as the start state
+		assertTrue(dfa.setFinal("A")); // Set "A" as a final state
+
+		assertTrue(dfa.addTransition("A", "A", '0')); // Add transition from "A" to "A" on '0'
+
+		return dfa;
+	}
+
+	@Test
+	public void testSingleStateFinal() {
+		DFA dfa = dfa8();
+		assertTrue(dfa.accepts("0"));
+		assertFalse(dfa.accepts("1"));
+		assertFalse(dfa.accepts("11"));
+		assertFalse(dfa.accepts("01"));
+		assertFalse(dfa.accepts("101"));
+		assertTrue(dfa.accepts("00"));
+		assertTrue(dfa.accepts("000"));
+		assertFalse(dfa.accepts("11001"));
+		assertTrue(dfa.accepts("0000"));
+		assertTrue(dfa.accepts("00000"));
+
+		System.out.println("testLoopOnFinalState pass");
+	}
+
+	private DFA dfa9() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+		dfa.addSigma('2');
+
+		assertTrue(dfa.addState("A")); // Add "A" as a state
+		assertTrue(dfa.addState("B")); // Add "B" as a state
+		assertTrue(dfa.addState("C")); // Add "C" as a state
+		assertTrue(dfa.addState("D")); // Add "D" as a state
+
+		assertTrue(dfa.setStart("A")); // Set "A" as the start state
+		assertTrue(dfa.setFinal("D")); // Set "D" as a final state
+
+		assertTrue(dfa.addTransition("A", "B", '0')); // Add transition from "A" to "B" on '0'
+		assertTrue(dfa.addTransition("B", "C", '1'));
+		assertTrue(dfa.addTransition("C", "D", '2'));
+		assertTrue(dfa.addTransition("D", "A", '2'));
+		assertTrue(dfa.addTransition("A", "D", '2'));
+		assertTrue(dfa.addTransition("D", "C", '1'));
+		assertTrue(dfa.addTransition("C", "B", '0'));
+		assertTrue(dfa.addTransition("B", "A", '1'));
+
+		return dfa;
+	}
+
+	@Test
+	public void testExtendedAlphabet() {
+		DFA dfa = dfa9();
+		assertTrue(dfa.accepts("012"));
+		assertFalse(dfa.accepts("011"));
+		assertTrue(dfa.accepts("2"));
+		assertFalse(dfa.accepts("22"));
+		assertTrue(dfa.accepts("222"));
+		assertTrue(dfa.accepts("0122010121222"));
+
+		System.out.println("testLoopOnFinalState pass");
+	}
+
 }
