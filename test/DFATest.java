@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import fa.dfa.DFA;
+import dfa.DFA;
 
 public class DFATest {
 

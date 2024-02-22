@@ -1,4 +1,4 @@
-package fa.dfa;
+package dfa;
 
 import java.util.*;
 
@@ -190,13 +190,10 @@ public class DFA implements DFAInterface {
         }
 
         for (char symbol : s.toCharArray()) {
-            if (!alphabet.contains(symbol)) {
-                return false; // Symbol not in alphabet
+            if (!alphabet.contains(symbol) || currentState.getTransition(symbol) == null) {
+                return false; // Symbol not in alphabet or no transition defined for this symbol
             }
             currentState = currentState.getTransition(symbol);
-            if (currentState == null) {
-                return false; // No transition defined for this symbol
-            }
         }
 
         return currentState.isFinal();

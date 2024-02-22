@@ -64,7 +64,7 @@ public class DFAState extends State {
      */
     public DFAState getTransition(char symbol) {
         if (!transitions.containsKey(symbol)) {
-            throw new NoSuchElementException("No transition for symbol: " + symbol);
+            return null; // No transition for this symbol
         }
         return transitions.get(symbol);
     }

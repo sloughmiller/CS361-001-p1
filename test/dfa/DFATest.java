@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import fa.dfa.DFA;
+import dfa.DFA;
 
 public class DFATest {
 
@@ -492,4 +492,75 @@ public class DFATest {
 		System.out.println("testMultipleFinalStates pass");
 	}
 
+	@Test
+	public void testLoopOnStartState() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+		dfa.addState("A");
+		dfa.setStart("A");
+		dfa.setFinal("A");
+		dfa.addTransition("A", "A", '0');
+
+		assertTrue(dfa.accepts("")); // DFA should accept the empty string
+		assertTrue(dfa.accepts("0")); // DFA should accept string with one looping symbol
+		assertTrue(dfa.accepts("00")); // DFA should accept string with multiple looping symbols
+		assertFalse(dfa.accepts("1")); // DFA should not accept string with non-looping symbol
+		assertFalse(dfa.accepts("01")); // DFA should not accept string with non-looping symbol followed by looping
+										// symbol
+
+		System.out.println("testLoopOnStartState pass");
+	}
+
+	@Test
+	public void testLoopOnFinalState() {
+		DFA dfa = dfaLoughmiller();
+		DFA dfa1 = dfa1();
+		DFA dfa2 = dfa2();
+
+		// DFA should accept the empty string as it starts in a final state
+		assertTrue(dfa.accepts(""));
+
+		// DFA should accept strings ending with '1' as it will be in the final state
+		// "A"
+		assertTrue(dfa.accepts("1")); // Stays in "A"
+		assertTrue(dfa.accepts("11111")); // Goes to "B" on '0', then back to "A" on '1'
+		assertTrue(dfa.accepts("000000001")); // Goes to "B" on '0', then back to "A" on '1'
+
+		// DFA should not accept strings ending with '0' as it will be in the non-final
+		// state "B"
+		assertFalse(dfa.accepts("10")); // Goes to "B" on '0', then back to "A" on '1'
+		assertFalse(dfa.accepts("0")); // Goes to "B" and stays there
+		assertFalse(dfa.accepts("100")); // Goes to "B" on '1', back to "A" on '0', then to "B" on '0'
+		assertFalse(dfa.accepts("0000")); // Goes to "B" on '0' and stays there
+
+		// DFA should accept the empty string as it starts in a final state
+		assertFalse(dfa1.accepts(""));
+
+		// DFA should accept strings ending with '1' as it will be in the final state
+		// "A"
+
+		assertTrue(dfa1.accepts("1")); // Stays in "A"
+		assertTrue(dfa1.accepts("11111")); // Goes to "B" on '0', then back to "A" on '1'
+		assertTrue(dfa1.accepts("000000001")); // Goes to "B" on '0', then back to "A" on '1'
+
+		// DFA should not accept strings ending with '0' as it will be in the non-final
+		// state "B"
+		assertFalse(dfa1.accepts("10")); // Goes to "B" on '0', then back to "A" on '1'
+		assertFalse(dfa1.accepts("0")); // Goes to "B" and stays there
+		assertFalse(dfa1.accepts("100")); // Goes to "B" on '1', back to "A" on '0', then to "B" on '0'
+		assertFalse(dfa1.accepts("0000")); // Goes to "B" on '0' and stays there
+
+		assertFalse(dfa2.accepts(""));
+
+		assertTrue(dfa2.accepts("00")); // Stays in "A"
+		assertTrue(dfa2.accepts("100")); // Goes to "B" on '0', then back to "A" on '1'
+		assertTrue(dfa2.accepts("1111110100000101001")); // Goes to "B" on '0', then back to "A" on '1'
+
+		assertFalse(dfa2.accepts("01")); // Goes to "B" on '0', then back to "A" on '1'
+		assertFalse(dfa2.accepts("11111")); // Goes to "B" and stays there
+		assertFalse(dfa2.accepts("01111")); // Goes to "B" on '1', back to "A" on '0', then to "B" on '0'
+
+		System.out.println("testLoopOnFinalState pass");
+	}
 }
