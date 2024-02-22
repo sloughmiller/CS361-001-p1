@@ -399,82 +399,125 @@ public class DFATest {
 		System.out.println("dfa3Swap accept pass");
 	}
 
-<<<<<<< Updated upstream
-	// @Test
-	// public void testEdgeCases() {
-	// DFA dfa = dfa3();
-	// assertTrue(dfa.accepts("")); // assuming empty string is accepted
-	// assertThrows(IllegalArgumentException.class, () -> dfa.accepts("abc")); //
-	// assuming 'a', 'b', 'c' are not in the
-	// // alphabet
-	// }
-=======
-/**
- * Our DFA
- */
-private DFA dfaLoughmiller() {
-    DFA dfa = new DFA();
->>>>>>> Stashed changes
+	/**
+	 * Our DFA
+	 */
+	private DFA dfaLoughmiller() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
 
-    dfa.addSigma('0');
-    dfa.addSigma('1');
+		assertTrue(dfa.addState("A")); // Add "A" as a state
+		assertTrue(dfa.addState("B")); // Add "B" as a state
 
-    assertTrue(dfa.addState("A")); // Add "A" as a state
-    assertTrue(dfa.addState("B")); // Add "B" as a state
+		assertTrue(dfa.setStart("A")); // Set "A" as the start state
+		assertTrue(dfa.setFinal("A")); // Set "A" as a final state
 
-    assertTrue(dfa.setStart("A")); // Set "A" as the start state
-    assertTrue(dfa.setFinal("A")); // Set "A" as a final state
+		assertTrue(dfa.addTransition("A", "B", '0')); // Add transition from "A" to "B" on '0'
+		assertTrue(dfa.addTransition("B", "A", '1')); // Add transition from "B" to "A" on '1'
+		assertTrue(dfa.addTransition("B", "B", '0')); // Add transition from "B" to itself on '0'
+		assertTrue(dfa.addTransition("A", "A", '1')); // Add transition from "A" to itself on '1'
 
-    assertTrue(dfa.addTransition("A", "B", '0')); // Add transition from "A" to "B" on '0'
-    assertTrue(dfa.addTransition("B", "A", '1')); // Add transition from "B" to "A" on '1'
-    assertTrue(dfa.addTransition("B", "B", '0')); // Add transition from "B" to itself on '0'
-    assertTrue(dfa.addTransition("A", "A", '1')); // Add transition from "A" to itself on '1'
+		return dfa;
+	}
 
-    return dfa;
-}
+	// OUR TESTS
+	@Test
+	public void testEmpty() {
+		DFA dfa = dfaLoughmiller();
+		assertTrue(dfa.accepts("")); // assuming empty string is accepted
 
+		System.out.println("dfaEmpty testEmpty pass");
+	}
 
+	@Test
+	public void testInvalidInput() {
+		DFA dfa = dfaLoughmiller();
 
-//OUR TESTS
-@Test
-public void testEmpty() {
-    DFA dfa = dfaLoughmiller();
-    assertTrue(dfa.accepts("")); // assuming empty string is accepted
+		// Test for characters not in the alphabet
+		try {
+			dfa.accepts("xyz");
+		} catch (IllegalArgumentException e) {
+			System.out.println("Passed: 'xyz' correctly threw IllegalArgumentException");
+		}
 
-    System.out.println("dfaEmpty testEmpty pass");
-}
+		// Test for strings that don't follow the '0' followed by '1' pattern
+		if (!dfa.accepts("00")) {
+			System.out.println("Passed: '00' correctly rejected");
+		}
+		if (!dfa.accepts("11")) {
+			System.out.println("Passed: '11' correctly rejected");
+		}
+		if (dfa.accepts("01")) {
+			System.out.println("Passed: '01' correctly accepted");
+		}
+	}
 
-@Test
-public void testInvalidInput() {
-    DFA dfa = dfaLoughmiller(); 
+	@Test
+	public void testInvalidOperations() {
+		DFA dfa = dfaLoughmiller();
 
-    // Test for characters not in the alphabet
-    try {
-        dfa.accepts("xyz");
-    } catch (IllegalArgumentException e) {
-        System.out.println("Passed: 'xyz' correctly threw IllegalArgumentException");
-    }
+		assertFalse(dfa.addTransition("nonexistent", "A", '1'));
+		assertFalse(dfa.setStart("nonexistent"));
+		assertFalse(dfa.setFinal("nonexistent"));
+	}
 
-    // Test for strings that don't follow the '0' followed by '1' pattern
-    if (!dfa.accepts("00")) {
-        System.out.println("Passed: '00' correctly rejected");
-    }
-    if (!dfa.accepts("11")) {
-        System.out.println("Passed: '11' correctly rejected");
-    }
-    if (dfa.accepts("01")) {
-        System.out.println("Passed: '01' correctly accepted");
-    }
-}
+	@Test
+	public void testNoFinalStates() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+		dfa.addState("A");
+		dfa.setStart("A");
+		assertFalse(dfa.accepts("0"));
+		assertFalse(dfa.accepts("1"));
+		assertFalse(dfa.accepts(""));
+		System.out.println("testNoFinalStates pass");
+	}
 
-@Test
-public void testInvalidOperations() {
-    DFA dfa = dfaLoughmiller();
+	@Test
+	public void testUnreachableStates() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+		dfa.addState("A");
+		dfa.addState("B");
+		dfa.setStart("A");
+		dfa.setFinal("A");
+		dfa.addTransition("A", "A", '0');
+		assertTrue(dfa.accepts("0"));
+		assertFalse(dfa.accepts("1"));
+		System.out.println("testUnreachableStates pass");
+	}
 
-    assertFalse(dfa.addTransition("nonexistent", "A", '1'));
-    assertFalse(dfa.setStart("nonexistent"));
-    assertFalse(dfa.setFinal("nonexistent"));
-}
+	@Test
+	public void testMultipleStartStates() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+		dfa.addState("A");
+		dfa.addState("B");
+		dfa.setStart("A");
+		dfa.setStart("B");
+		// Check behavior or expect an error
+		System.out.println("testMultipleStartStates pass");
+	}
 
+	@Test
+	public void testMultipleFinalStates() {
+		DFA dfa = new DFA();
+		dfa.addSigma('0');
+		dfa.addSigma('1');
+		dfa.addState("A");
+		dfa.addState("B");
+		dfa.setStart("A");
+		dfa.setFinal("A");
+		dfa.setFinal("B");
+		dfa.addTransition("A", "B", '0');
+		dfa.addTransition("B", "A", '1');
+		assertTrue(dfa.accepts("0"));
+		assertTrue(dfa.accepts("01"));
+		System.out.println("testMultipleFinalStates pass");
+	}
 
 }

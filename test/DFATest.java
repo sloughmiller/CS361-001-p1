@@ -1,4 +1,4 @@
-package test.dfa;
+package test;
 
 import static org.junit.Assert.*;
 
@@ -398,83 +398,5 @@ public class DFATest {
 
 		System.out.println("dfa3Swap accept pass");
 	}
-
-<<<<<<< Updated upstream
-	// @Test
-	// public void testEdgeCases() {
-	// DFA dfa = dfa3();
-	// assertTrue(dfa.accepts("")); // assuming empty string is accepted
-	// assertThrows(IllegalArgumentException.class, () -> dfa.accepts("abc")); //
-	// assuming 'a', 'b', 'c' are not in the
-	// // alphabet
-	// }
-=======
-/**
- * Our DFA
- */
-private DFA dfaLoughmiller() {
-    DFA dfa = new DFA();
->>>>>>> Stashed changes
-
-    dfa.addSigma('0');
-    dfa.addSigma('1');
-
-    assertTrue(dfa.addState("A")); // Add "A" as a state
-    assertTrue(dfa.addState("B")); // Add "B" as a state
-
-    assertTrue(dfa.setStart("A")); // Set "A" as the start state
-    assertTrue(dfa.setFinal("A")); // Set "A" as a final state
-
-    assertTrue(dfa.addTransition("A", "B", '0')); // Add transition from "A" to "B" on '0'
-    assertTrue(dfa.addTransition("B", "A", '1')); // Add transition from "B" to "A" on '1'
-    assertTrue(dfa.addTransition("B", "B", '0')); // Add transition from "B" to itself on '0'
-    assertTrue(dfa.addTransition("A", "A", '1')); // Add transition from "A" to itself on '1'
-
-    return dfa;
-}
-
-
-
-//OUR TESTS
-@Test
-public void testEmpty() {
-    DFA dfa = dfaLoughmiller();
-    assertTrue(dfa.accepts("")); // assuming empty string is accepted
-
-    System.out.println("dfaEmpty testEmpty pass");
-}
-
-@Test
-public void testInvalidInput() {
-    DFA dfa = dfaLoughmiller(); 
-
-    // Test for characters not in the alphabet
-    try {
-        dfa.accepts("xyz");
-    } catch (IllegalArgumentException e) {
-        System.out.println("Passed: 'xyz' correctly threw IllegalArgumentException");
-    }
-
-    // Test for strings that don't follow the '0' followed by '1' pattern
-    if (!dfa.accepts("00")) {
-        System.out.println("Passed: '00' correctly rejected");
-    }
-    if (!dfa.accepts("11")) {
-        System.out.println("Passed: '11' correctly rejected");
-    }
-    if (dfa.accepts("01")) {
-        System.out.println("Passed: '01' correctly accepted");
-    }
-}
-
-@Test
-public void testInvalidOperations() {
-    DFA dfa = dfaLoughmiller();
-
-    assertFalse(dfa.addTransition("nonexistent", "A", '1'));
-    assertFalse(dfa.setStart("nonexistent"));
-    assertFalse(dfa.setFinal("nonexistent"));
-}
-
 
 }
