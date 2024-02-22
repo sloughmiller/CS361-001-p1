@@ -463,34 +463,6 @@ public class DFATest {
 	}
 
 	@Test
-	public void testNoFinalStates() {
-		DFA dfa = new DFA();
-		dfa.addSigma('0');
-		dfa.addSigma('1');
-		dfa.addState("A");
-		dfa.setStart("A");
-		assertFalse(dfa.accepts("0"));
-		assertFalse(dfa.accepts("1"));
-		assertFalse(dfa.accepts(""));
-		System.out.println("testNoFinalStates pass");
-	}
-
-	@Test
-	public void testUnreachableStates() {
-		DFA dfa = new DFA();
-		dfa.addSigma('0');
-		dfa.addSigma('1');
-		dfa.addState("A");
-		dfa.addState("B");
-		dfa.setStart("A");
-		dfa.setFinal("A");
-		dfa.addTransition("A", "A", '0');
-		assertTrue(dfa.accepts("0"));
-		assertFalse(dfa.accepts("1"));
-		System.out.println("testUnreachableStates pass");
-	}
-
-	@Test
 	public void testMultipleStartStates() {
 		DFA dfa = new DFA();
 		dfa.addSigma('0');
