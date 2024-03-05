@@ -2,6 +2,7 @@ package fa.dfa;
 
 import java.util.*;
 
+import fa.DFAInterface;
 import fa.DFAState;
 import fa.State;
 

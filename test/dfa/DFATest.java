@@ -1,7 +1,6 @@
 package test.dfa;
 
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 
